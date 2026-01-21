@@ -51,9 +51,15 @@ Parameters for tools are also an Entity [defined in the specification](parameter
 The parameters field hold a struct of `Parameter` instances indexed by the parameter name.
 An example can be found in the Example section below or on the [Parameters page](./input.md#parameters-file-specification).
 
+### `command`
+
+The `command` field is an optional string specifying the exact command to execute the tool.
+If provided, gotap uses this instead of guessing the entrypoint from files like `run.py`.
+Example: `command: "python run.py"`
+
 ### `data`
 
-[Input data](./input.md#data-file-specification) for a tool is defined separately from the 
+[Input data](./input.md#data-file-specification) for a tool is defined separately from the
 parameters in an additional section of `tool.yml`.
 Just like for the parameters, the input data of a tool is indexed by their names.
 In case no further configuration is needed, data may be supplied in a single list
