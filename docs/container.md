@@ -14,11 +14,13 @@ In order to work properly, there is a minimum required structure, that the
 container has to follow. In  order to build a container image accordingly,
 there are a number of template repositories on Github:
 
-* [Python template](https://github.com/VForWaTer/tool_template_python)
-* [R template](https://github.com/VForWaTer/tool_template_r)
-* [Node.js template](https://github.com/VForWaTer/tool_template_node)
-* [Octave template](https://github.com/VForWaTer/tool_template_octave)
-* [MATLAB template](https://github.com/VForWaTer/tool_template_matlab)
+* [Python template](https://github.com/tool-spec/tool_template_python)
+* [R template](https://github.com/tool-spec/tool_template_r)
+* [Node.js template](https://github.com/tool-spec/tool_template_node)
+* [Octave template](https://github.com/tool-spec/tool_template_octave)
+* [MATLAB template](https://github.com/tool-spec/tool_template_matlab)
+* [Jupyter template](https://github.com/tool-spec/tool_template_jupyter)
+* [TypeScript template](https://github.com/tool-spec/tool_template_typescript)
 
 The core idea is to enforce a specific structure in the container, so that 
 others know where to find things:
@@ -55,9 +57,13 @@ information about the tool.
 Any executable file is supported. Please note that the tool-specs support only transformation-like tools that terminate *end* upon completion; 
 service tools are not supported.
 
-Please note: In order to work properly with external tools, you implement the 
-execution of the script, as shown in the sample repositories, as the default
-Docker command, **not** entrypoint:
+Templates use [gotap](https://github.com/tool-spec/gotap) as the default Docker command. gotap validates the input and executes the tool:
+
+```Dockerfile
+CMD ["gotap", "run", "<toolname>", "--input-file", "/in/input.json"]
+```
+
+You can also run the script directly (use the Docker command, **not** entrypoint):
 
 ```Dockerfile
 CMD ["python", "run.py"]
