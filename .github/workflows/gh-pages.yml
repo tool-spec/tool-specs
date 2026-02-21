@@ -3,20 +3,37 @@ name: Build docs
 on:
   push:
     branches: [ main ]
+  
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   documentation:
     name: Build and deploy specs to GH pages
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.documentation.outputs.page_url }}
     
     steps:
       - name: Checkout and use lfs
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         
-      - name: Set up Python 3.9
+      - name: Set up Python 3.12
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.12
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
           
       - name: Install dependencies
         run: pip install mkdocs mkdocs-material
@@ -24,11 +41,13 @@ jobs:
       - name: Build the documentation
         run: | 
           mkdocs build
-        
-      - name: Upload to Github pages
-        uses: crazy-max/ghaction-github-pages@v1
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          target_branch: gh-pages
-          build_dir: site
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Upload the site repo build by mkdocs
+          path: './site'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
